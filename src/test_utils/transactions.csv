@@ -1,0 +1,12 @@
+transaction_type,client,tx,amount
+deposit ,5,2,32.3343
+ withdrawal,5,3,33.222
+dispute ,5,3,
+resolve ,5,3,
+  chargeback,5,3,
+deposit ,3,4,2.5
+deposit ,3,5,3
+deposit , 3 ,5,  300
+withdrawal ,3, 6    ,   1.5
+  dispute ,3,5,
+chargeback,3,5,
