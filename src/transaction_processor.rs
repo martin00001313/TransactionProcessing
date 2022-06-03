@@ -36,7 +36,7 @@ impl<'a, L: TransactionLoader> TransactionsProcessor<'a, L> {
                 TransactionType::Dispute => self.apply_dispute(action_details),
                 TransactionType::Resolve => self.apply_resolve(action_details),
                 TransactionType::Chargeback => self.apply_chargeback(action_details),
-                TransactionType::Unknown => true,
+                TransactionType::Unknown => false,
             };
         }
     }
