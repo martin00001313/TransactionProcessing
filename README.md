@@ -69,3 +69,19 @@ Now it continues to consider, but can easily be blocked by uncommenting filter i
 3. In case of 'Resolve' and 'Chargeback' the processor only checks correctness of client id, transaction id, etc.
    'Dispute' actions absence is not considered, but it's logically correct to add such restriction,
    i.e. if 'Resolve' and 'Chargeback' action should be after respective 'Dispute'
+
+#Example of non-fully correct behaviors:
+1. Multi-dispute of the transaction
+   1. apply deposit: client - {client - 1, tx - 1, amount - 10.0} => state after operation: (1, available: 10, held: 0, total: 10, locked: false)
+   2. apply deposit: client - {client - 1, tx - 2, amount - 15.0} => state after operation: (1, available: 25, held: 0, total: 25, locked: false)
+   3. dispute the transaction - {client - 1, tx - 1} => state after operation: {1, available- 15, held-10, total - 25}
+   4. dispute the transaction again - {client - 1, tx - 1} => state after operation: {1, available- 5, held-20, total - 25}
+2. Resolve of non disputed transaction
+3. Multi-resolve of the same disputed transaction
+4. Chargeback of non-disputed transaction
+5. Multi-chargeback of disputed transaction
+6. Multi-dispute the same transaction w/o resolve or chargeback
+
+All above-mentioned logically incorrect(probably) issue can be easily solved br tracing the last transaction action type for the given transaction ID
+and keep last action type to next allowed action types mapping.
+   
