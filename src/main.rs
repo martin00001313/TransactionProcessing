@@ -47,6 +47,8 @@ fn run_flow(path: &str) -> Result<String, anyhow::Error> {
 #[cfg(test)]
 mod test {
     use crate::{run_flow, ClientState};
+    use float_cmp::approx_eq;
+    use std::collections::HashMap;
 
     #[test]
     pub fn test_flow() {
@@ -63,6 +65,23 @@ mod test {
             data.push(r);
         }
 
-        assert_eq!(data.len(), 2);
+        let id_to_data: HashMap<u16, ClientState> =
+            data.into_iter().map(|d| (d.client, d)).collect();
+        assert_eq!(id_to_data.len(), 2);
+
+        let c3 = id_to_data.get(&3).unwrap();
+        assert!(c3.locked, "Should be locked due to chargeback!");
+        assert!(approx_eq!(f32, c3.total, 1., ulps = 4));
+        assert!(approx_eq!(f32, c3.available, 1., ulps = 4));
+        assert!(approx_eq!(f32, c3.held, 0., ulps = 4));
+
+        let c5 = id_to_data.get(&5).unwrap();
+        assert!(
+            !c5.locked,
+            "Should not be locked due to incorrect chargeback!"
+        );
+        assert!(approx_eq!(f32, c5.total, 32.3343, ulps = 4));
+        assert!(approx_eq!(f32, c5.held, 0., ulps = 4));
+        assert!(approx_eq!(f32, c5.available, 32.3343, ulps = 4));
     }
 }
