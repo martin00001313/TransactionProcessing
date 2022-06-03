@@ -37,9 +37,11 @@ impl TransactionMgr {
         }
     }
 
-    /// Get transaction by id
-    pub fn get_transaction(&self, id: u32) -> Option<&TransactionDetails> {
-        self.id_to_details.get(&id)
+    /// Get transaction by id and client id
+    pub fn get_transaction(&self, id: u32, client_id: u16) -> Option<&TransactionDetails> {
+        self.id_to_details
+            .get(&id)
+            .filter(|d| d.client == client_id)
     }
 
     pub fn transaction_exist(&self, id: u32) -> bool {
@@ -83,7 +85,7 @@ mod test {
         assert!(
             approx_eq!(
                 f32,
-                mgr.get_transaction(1).unwrap().amount.unwrap(),
+                mgr.get_transaction(1, 1).unwrap().amount.unwrap(),
                 2.,
                 ulps = 4
             ),
