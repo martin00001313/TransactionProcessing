@@ -67,12 +67,12 @@ mod test {
 
         let id_to_data: HashMap<u16, ClientState> =
             data.into_iter().map(|d| (d.client, d)).collect();
-        assert_eq!(id_to_data.len(), 2);
+        assert_eq!(id_to_data.len(), 3);
 
         let c3 = id_to_data.get(&3).unwrap();
         assert!(c3.locked, "Should be locked due to chargeback!");
-        assert!(approx_eq!(f32, c3.total, 1., ulps = 4));
-        assert!(approx_eq!(f32, c3.available, 1., ulps = 4));
+        assert!(approx_eq!(f32, c3.total, 11.5, ulps = 4));
+        assert!(approx_eq!(f32, c3.available, 11.5, ulps = 4));
         assert!(approx_eq!(f32, c3.held, 0., ulps = 4));
 
         let c5 = id_to_data.get(&5).unwrap();
@@ -83,5 +83,14 @@ mod test {
         assert!(approx_eq!(f32, c5.total, 32.3343, ulps = 4));
         assert!(approx_eq!(f32, c5.held, 0., ulps = 4));
         assert!(approx_eq!(f32, c5.available, 32.3343, ulps = 4));
+
+        let c1 = id_to_data.get(&1).unwrap();
+        assert!(
+            !c1.locked,
+            "Should not be locked as there is no chargeback!"
+        );
+        assert!(approx_eq!(f32, c1.total, 28., ulps = 4));
+        assert!(approx_eq!(f32, c1.held, 0., ulps = 4));
+        assert!(approx_eq!(f32, c1.available, 28., ulps = 4));
     }
 }

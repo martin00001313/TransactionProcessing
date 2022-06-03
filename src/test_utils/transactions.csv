@@ -10,3 +10,13 @@ deposit , 3 ,5,  300
 withdrawal ,3, 6    ,   1.5
   dispute ,3,5,
 chargeback,3,5,
+deposit ,1,11,10
+deposit ,1,7,10
+deposit ,1,11,11
+dispute ,1,7,
+deposit ,1,8,12
+withdrawal ,1,9,4
+dispute ,1,8,
+deposit ,3,10,10.5
+resolve, 1,7,
+resolve, 1, 8,
